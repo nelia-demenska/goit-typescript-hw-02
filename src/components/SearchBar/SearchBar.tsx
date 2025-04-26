@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { toast } from "react-hot-toast";
 import css from "./SearchBar.module.css";
 
-export default function SearchBar({ onSearch }) {
-    const [searchQuery, setSearchQuery] = useState("");
+interface SearchBarProps {
+    onSearch: (query: string) => void;
+}
 
-    const handleSubmit = (e) => {
+export default function SearchBar({ onSearch }: SearchBarProps) {
+    const [searchQuery, setSearchQuery] = useState<string>("");
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!searchQuery.trim()) {
@@ -17,21 +21,25 @@ export default function SearchBar({ onSearch }) {
     setSearchQuery("");
     };
 
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    };
+
     return (
     <header className={css.header}>
         <form onSubmit={handleSubmit} className={css.searchbar}>
-            <button className={css.button} type="submit">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <button className={css.button} type="submit">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="11" cy="11" r="8"></circle>
     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>                    
-            </button>
+                </svg>
+        </button>
         <input
             type="text"
             placeholder="Search images and photos"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleInputChange}
         />
         </form>
     </header>
